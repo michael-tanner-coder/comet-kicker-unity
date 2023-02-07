@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: NormalShot
   m_EditorClassIdentifier: 
   _speed: 3
+  _shotDelay: 0.2
   _count: 1
   _sprite: {fileID: 0}
