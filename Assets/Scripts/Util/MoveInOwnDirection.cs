@@ -20,4 +20,10 @@ public class MoveInOwnDirection : MonoBehaviour
 
         transform.position = new Vector3(nextX, nextY, transform.position.z);
     }
+
+    public void SetDirection(Vector2 direction)
+    {
+        _xDirection = direction.x;
+        _yDirection = direction.y;
+    }
 }
