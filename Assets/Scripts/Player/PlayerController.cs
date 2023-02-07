@@ -37,6 +37,7 @@ namespace TarodevController {
             GatherInput();
             RunCollisionChecks();
 
+            CalculateWalk(); // Horizontal movement
             CalculateJumpApex(); // Affects fall speed, so calculate before gravity
             CalculateGravity(); // Vertical movement
             CalculateJump(); // Possibly overrides vertical
@@ -53,6 +54,7 @@ namespace TarodevController {
             Input = new FrameInput {
                 JumpDown = _playerInput.actions["jump"].triggered,
                 JumpUp = _playerInput.actions["jump"].ReadValue<float>() < .1f,
+                X = _playerInput.actions["move"].ReadValue<float>(),
             };
             if (Input.JumpDown) {
                 _lastJumpPressed = Time.time;
@@ -140,6 +142,38 @@ namespace TarodevController {
             Gizmos.color = Color.red;
             var move = new Vector3(_currentHorizontalSpeed, _currentVerticalSpeed) * Time.deltaTime;
             Gizmos.DrawWireCube(transform.position + _characterBounds.center + move, _characterBounds.size);
+        }
+
+        #endregion
+
+        #region Walk
+
+        [Header("WALKING")] [SerializeField] private float _acceleration = 90;
+        [SerializeField] private float _moveClamp = 13;
+        [SerializeField] private float _deAcceleration = 60f;
+        [SerializeField] private float _apexBonus = 2;
+
+        private void CalculateWalk() {
+            if (Input.X != 0) {
+                // Set horizontal move speed
+                _currentHorizontalSpeed += Input.X * _acceleration * Time.deltaTime;
+
+                // clamped by max frame movement
+                _currentHorizontalSpeed = Mathf.Clamp(_currentHorizontalSpeed, -_moveClamp, _moveClamp);
+
+                // Apply bonus at the apex of a jump
+                var apexBonus = Mathf.Sign(Input.X) * _apexBonus * _apexPoint;
+                _currentHorizontalSpeed += apexBonus * Time.deltaTime;
+            }
+            else {
+                // No input. Let's slow the character down
+                _currentHorizontalSpeed = Mathf.MoveTowards(_currentHorizontalSpeed, 0, _deAcceleration * Time.deltaTime);
+            }
+
+            if (_currentHorizontalSpeed > 0 && _colRight || _currentHorizontalSpeed < 0 && _colLeft) {
+                // Don't walk through walls
+                _currentHorizontalSpeed = 0;
+            }
         }
 
         #endregion

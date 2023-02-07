@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace TarodevController {
     public struct FrameInput {
+        public float X;
         public bool JumpDown;
         public bool JumpUp;
     }
