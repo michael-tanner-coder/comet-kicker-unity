@@ -16,9 +16,15 @@ public class Shoot : MonoBehaviour
     [SerializeField]
     private PlayerInput _input;
 
-    [SerializeField]
-    private float _shotDelay = 2f;
+    private float _shotDelay;
+    private float _timeBetweenShots;
     private bool _didShoot = false; 
+
+    void Awake() 
+    {
+        _shotDelay = _projectileType.ShotDelay;
+        _timeBetweenShots = _shotDelay;
+    }
 
     void Update()
     {
@@ -30,13 +36,13 @@ public class Shoot : MonoBehaviour
 
         if (_didShoot)
         {
-            _shotDelay -= Time.deltaTime;
+            _timeBetweenShots -= Time.deltaTime;
         }
 
-        if (_shotDelay <= 0)
+        if (_timeBetweenShots <= 0)
         {
             _didShoot = false;
-            _shotDelay = 2f;
+            _timeBetweenShots = _shotDelay;
         }
     }
 

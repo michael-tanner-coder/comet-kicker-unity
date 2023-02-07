@@ -5,7 +5,11 @@ public class ProjectileSO : ScriptableObject {
     [SerializeField]
     private float _speed = 1f;
     public float Speed => _speed;
-    
+
+    [SerializeField]
+    private float _shotDelay = 1f;
+    public float ShotDelay => _shotDelay;
+
     [SerializeField]
     private int _count = 1;
     public int Count => _count;
