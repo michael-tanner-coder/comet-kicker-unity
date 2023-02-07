@@ -16,11 +16,27 @@ public class Shoot : MonoBehaviour
     [SerializeField]
     private PlayerInput _input;
 
+    [SerializeField]
+    private float _shotDelay = 2f;
+    private bool _didShoot = false; 
+
     void Update()
     {
-        if (_input.actions["shoot"].triggered)
+        if (_input.actions["shoot"].triggered && !_didShoot)
         {
             SpawnProjectile();
+            _didShoot = true;
+        }
+
+        if (_didShoot)
+        {
+            _shotDelay -= Time.deltaTime;
+        }
+
+        if (_shotDelay <= 0)
+        {
+            _didShoot = false;
+            _shotDelay = 2f;
         }
     }
 
